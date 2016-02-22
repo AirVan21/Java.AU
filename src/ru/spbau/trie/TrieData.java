@@ -63,12 +63,11 @@ public class TrieData implements Trie {
             current.decreaseNumberOfLeavesInSubtree();
             TreeNode next = current.getLink(letter);
 
-            if (next.getNumberOfLeavesInSubtree() == 0) {
+            if (next.getNumberOfLeavesInSubtree() == 0 || next.getNumberOfLeavesInSubtree() == 1 && !next.isLeaf()) {
                 current.deleteLink(letter);
                 size--;
                 return true;
             }
-
             current = next;
         }
 
