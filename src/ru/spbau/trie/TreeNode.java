@@ -8,22 +8,22 @@ import java.util.Map;
  */
 public class TreeNode {
 
-    private int numberOfLeavesInSubtree;
-    private Map<Character, TreeNode> links;
-    private boolean isLeaf;
+    private int numberOfTerminalsInSubtree;
+    private final Map<Character, TreeNode> links;
+    private boolean isTerminal;
 
     public TreeNode() {
-        numberOfLeavesInSubtree = 0;
-        isLeaf = false;
+        numberOfTerminalsInSubtree = 0;
+        isTerminal = false;
         links = new HashMap<Character, TreeNode>();
     }
 
-    public boolean isLeaf() {
-        return isLeaf;
+    public boolean isTerminal() {
+        return isTerminal;
     }
 
-    public void setIsLeaf(boolean value) {
-        this.isLeaf = value;
+    public void setIsTerminal(boolean value) {
+        this.isTerminal = value;
     }
 
     public TreeNode getLink(Character letter) {
@@ -41,15 +41,15 @@ public class TreeNode {
         links.remove(letter);
     }
 
-    public int getNumberOfLeavesInSubtree() {
-        return numberOfLeavesInSubtree;
+    public int getNumberOfTerminalsInSubtree() {
+        return numberOfTerminalsInSubtree;
     }
 
-    public void increaseNumberOfLeavesInSubtree() {
-        numberOfLeavesInSubtree++;
+    public void increaseNumberOfTerminalsInSubtree() {
+        numberOfTerminalsInSubtree++;
     }
 
-    public void decreaseNumberOfLeavesInSubtree() {
-        numberOfLeavesInSubtree--;
+    public void decreaseNumberOfTerminalsInSubtree() {
+        numberOfTerminalsInSubtree--;
     }
 }

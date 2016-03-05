@@ -3,12 +3,12 @@ package ru.spbau.trie;
 /**
  * Created by airvan21 on 21.02.16.
  */
-public class TrieData implements Trie {
+public class TrieImpl implements Trie {
 
-    private TreeNode root;
+    private final TreeNode root;
     private int size;
 
-    public TrieData() {
+    public TrieImpl() {
         size = 0;
         root = new TreeNode();
     }
@@ -20,8 +20,8 @@ public class TrieData implements Trie {
         }
 
         TreeNode current = root;
-        for (Character letter : element.toCharArray()) {
-            current.increaseNumberOfLeavesInSubtree();
+        for (char letter : element.toCharArray()) {
+            current.increaseNumberOfTerminalsInSubtree();
             TreeNode next = current.getLink(letter);
 
             if (next == null) {
@@ -30,7 +30,7 @@ public class TrieData implements Trie {
             current = next;
         }
 
-        current.setIsLeaf(true);
+        current.setIsTerminal(true);
         size++;
 
         return true;
@@ -40,7 +40,7 @@ public class TrieData implements Trie {
     public boolean contains(String element) {
         TreeNode current = root;
 
-        for (Character letter : element.toCharArray()) {
+        for (char letter : element.toCharArray()) {
             current = current.getLink(letter);
 
             if (current == null) {
@@ -49,7 +49,7 @@ public class TrieData implements Trie {
             }
         }
 
-        return current.isLeaf();
+        return current.isTerminal();
     }
 
     @Override
@@ -59,11 +59,11 @@ public class TrieData implements Trie {
         }
 
         TreeNode current = root;
-        for (Character letter : element.toCharArray()) {
-            current.decreaseNumberOfLeavesInSubtree();
+        for (char letter : element.toCharArray()) {
+            current.decreaseNumberOfTerminalsInSubtree();
             TreeNode next = current.getLink(letter);
 
-            if (next.getNumberOfLeavesInSubtree() == 0 || next.getNumberOfLeavesInSubtree() == 1 && !next.isLeaf()) {
+            if (next.getNumberOfTerminalsInSubtree() == 0 || next.getNumberOfTerminalsInSubtree() == 1 && !next.isTerminal()) {
                 current.deleteLink(letter);
                 size--;
                 return true;
@@ -71,7 +71,7 @@ public class TrieData implements Trie {
             current = next;
         }
 
-        current.setIsLeaf(false);
+        current.setIsTerminal(false);
         size--;
 
         return true;
@@ -86,13 +86,15 @@ public class TrieData implements Trie {
     public int howManyStartsWithPrefix(String prefix) {
         TreeNode current = root;
 
-        for (Character letter : prefix.toCharArray()) {
+        for (char letter : prefix.toCharArray()) {
             current = current.getLink(letter);
             if (current == null) {
                 return 0;
             }
         }
 
-        return current.isLeaf() ? current.getNumberOfLeavesInSubtree() + 1 : current.getNumberOfLeavesInSubtree();
+        return current.isTerminal()
+                ? current.getNumberOfTerminalsInSubtree() + 1
+                : current.getNumberOfTerminalsInSubtree();
     }
 }

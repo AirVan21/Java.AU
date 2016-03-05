@@ -8,13 +8,13 @@ import org.junit.Test;
 /**
  * Created by airvan21 on 22.02.16.
  */
-public class TrieDataTest {
+public class TrieImplTest {
 
-    private TrieData trie;
+    private TrieImpl trie;
 
     @Before
     public void beforeTest() {
-        trie = new TrieData();
+        trie = new TrieImpl();
     }
 
     @Test
