@@ -78,6 +78,38 @@ public class TrieTest {
         assertFalse(newTrie.contains("ba"));
     }
 
+    @Test
+    public void loadTesting() throws IOException {
+        final int testSize = 1000;
+
+        Trie trie = instance();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < testSize; ++i) {
+            sb.append("a");
+            assertTrue(trie.add(sb.toString()));
+        }
+        sb.setLength(0);
+
+        assertEquals(testSize, trie.size());
+        assertEquals(testSize, trie.howManyStartsWithPrefix("a"));
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ((StreamSerializable) trie).serialize(outputStream);
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        Trie newTrie = instance();
+        ((StreamSerializable) newTrie).deserialize(inputStream);
+
+        assertEquals(testSize, newTrie.size());
+        assertEquals(testSize, newTrie.howManyStartsWithPrefix("a"));
+
+        for (int i = 0; i < testSize; ++i) {
+            sb.append("a");
+            assertTrue(newTrie.contains(sb.toString()));
+        }
+    }
+
     @Test(expected=IOException.class)
     public void testSimpleSerializationFails() throws IOException {
         Trie trie = instance();

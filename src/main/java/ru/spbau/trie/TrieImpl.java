@@ -1,17 +1,17 @@
 package ru.spbau.trie;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by airvan21 on 21.02.16.
  */
 public class TrieImpl implements Trie, StreamSerializable {
 
-    private TreeNode root;
-    private int size;
+    final private TreeNode root;
 
     public TrieImpl() {
-        size = 0;
         root = new TreeNode();
     }
 
@@ -33,7 +33,6 @@ public class TrieImpl implements Trie, StreamSerializable {
         }
 
         current.setIsTerminal(true);
-        size++;
 
         return true;
     }
@@ -67,21 +66,19 @@ public class TrieImpl implements Trie, StreamSerializable {
 
             if (next.getNumberOfTerminalsInSubtree() == 0 || next.getNumberOfTerminalsInSubtree() == 1 && !next.isTerminal()) {
                 current.deleteChild(letter);
-                size--;
                 return true;
             }
             current = next;
         }
 
         current.setIsTerminal(false);
-        size--;
 
         return true;
     }
 
     @Override
     public int size() {
-        return size;
+        return howManyStartsWithPrefix("");
     }
 
     @Override
@@ -103,14 +100,101 @@ public class TrieImpl implements Trie, StreamSerializable {
     @Override
     public void serialize(OutputStream out) throws IOException {
         DataOutputStream dout = new DataOutputStream(out);
-        out.write(size);
         root.serialize(dout);
+        dout.flush();
     }
 
     @Override
     public void deserialize(InputStream in) throws IOException {
         DataInputStream din = new DataInputStream(in);
-        size = in.read();
         root.deserialize(din);
     }
+
+    private class TreeNode {
+
+        private int numberOfTerminalsInSubtree;
+        private boolean isTerminal;
+        private Map<Character, TreeNode> children;
+
+        public TreeNode() {
+            numberOfTerminalsInSubtree = 0;
+            isTerminal = false;
+            children = new HashMap<>();
+        }
+
+        private TreeNode(int numOfTerminals, boolean markedTerminal) {
+            numberOfTerminalsInSubtree = numOfTerminals;
+            isTerminal = markedTerminal;
+            children = new HashMap<>();
+        }
+
+        public boolean isTerminal() {
+            return isTerminal;
+        }
+
+        public void setIsTerminal(boolean value) {
+            this.isTerminal = value;
+        }
+
+        public TreeNode getChild(char letter) {
+            return children.get(letter);
+        }
+
+        public TreeNode addChild(char letter) {
+            TreeNode node = new TreeNode();
+            children.put(letter, node);
+
+            return node;
+        }
+
+        public void deleteChild(char letter) {
+            children.remove(letter);
+        }
+
+        public int getNumberOfTerminalsInSubtree() {
+            return numberOfTerminalsInSubtree;
+        }
+
+        public void increaseNumberOfTerminalsInSubtree() {
+            numberOfTerminalsInSubtree++;
+        }
+
+        public void decreaseNumberOfTerminalsInSubtree() {
+            numberOfTerminalsInSubtree--;
+        }
+
+        public void serialize(DataOutputStream out) throws IOException {
+            out.writeInt(numberOfTerminalsInSubtree);
+            out.writeBoolean(isTerminal);
+            out.writeInt(children.size());
+
+            for (Map.Entry<Character, TreeNode> node : children.entrySet()) {
+                out.writeChar(node.getKey());
+                node.getValue().serialize(out);
+            }
+        }
+
+        public void deserialize(DataInputStream in) throws IOException {
+            TreeNode restoredNode = deserializeTrieNode(in);
+
+            numberOfTerminalsInSubtree = restoredNode.numberOfTerminalsInSubtree;
+            isTerminal = restoredNode.isTerminal;
+            children = restoredNode.children;
+        }
+
+        private TreeNode deserializeTrieNode(DataInputStream in) throws IOException {
+            int numOfTerminals = in.readInt();
+            boolean markTerminal = in.readBoolean();
+            TreeNode node = new TreeNode(numOfTerminals, markTerminal);
+
+            int size = in.readInt();
+            for (int i = 0; i < size; i++) {
+                char letter = in.readChar();
+                node.children.put(letter, deserializeTrieNode(in));
+            }
+
+            return node;
+        }
+    }
 }
+
