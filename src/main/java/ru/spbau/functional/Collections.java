@@ -44,7 +44,7 @@ public class Collections {
     /**
      * Logic: foldl :: (A1 -> A2 -> A1) -> A1 -> [A2] -> A1
      */
-    public static <A1, A2> A1 foldl(Function2<A1, A2, A1> f, A1 base, Iterable<A2> container) {
+    public static <A1, A2> A1 foldl(Function2<A1, ? super A2, A1> f, A1 base, Iterable<A2> container) {
         A1 accumulator = base;
 
         for (A2 arg2 : container) {
@@ -57,11 +57,11 @@ public class Collections {
     /**
      * Logic: foldr :: (A1 -> A2 -> A2) -> A2 -> [A1] -> A2
      */
-    public static <A1, A2> A2 foldr(Function2<A1, A2, A2> f, A2 base, Iterable<A1> container) {
+    public static <A1, A2> A2 foldr(Function2<? super A1, A2, A2> f, A2 base, Iterable<A1> container) {
         return foldr(f, base, container.iterator());
     }
 
-    private static <A1, A2> A2 foldr(Function2<A1, A2, A2> f, A2 base, Iterator<A1> it) {
+    private static <A1, A2> A2 foldr(Function2<? super A1, A2, A2> f, A2 base, Iterator<A1> it) {
         if (it.hasNext()) {
             return f.apply(it.next(), foldr(f, base, it));
         } else {
