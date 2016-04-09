@@ -20,28 +20,36 @@ public class Function1Test {
 
     @Test
     public void testApplyOnInheritance() {
-        Function1<BasketballTeam, String> th = arg -> "Throw!";
-        Function1<FootballTeam, String>   kc = arg -> "Kick!";
+        Function1<BasketballTeam, String> thr  = arg -> "Throw!";
+        Function1<FootballTeam, String>   kick = arg -> "Kick!";
         Function1<Chelsea, String>        goal = arg -> "Chelsea scores!";
 
-        th.apply(new BasketballTeam());
-        kc.apply(new FootballTeam());
-        kc.apply(new Chelsea());
+        thr.apply(new BasketballTeam());
+        kick.apply(new FootballTeam());
+        kick.apply(new Chelsea());
         goal.apply(new Chelsea());
 
         /* Hadn't typechecked:
 
         goal.apply(new FootballTeam());
-        th.apply(new FootballTeam());
+        thr.apply(new FootballTeam());
         goal.apply(new BasketballTeam());
-        kc.apply(new BasketballTeam());
+        kick.apply(new BasketballTeam());
 
         */
     }
 
     @Test
     public void testCompose() {
+        assertEquals(new Integer(CONST_FIVE * 2 + 3), f.compose(g).apply(CONST_FIVE));
+        assertEquals(new Integer((CONST_FIVE + 3) * 2), g.compose(f).apply(CONST_FIVE));
 
+        Function1<FootballTeam, String>       kick = arg -> "Kick!";
+        Function1<FootballTeam, FootballTeam> id   = arg -> arg;
+        Function1<String, String>             goal = arg -> "Goal!";
+
+        assertEquals("Kick!", id.compose(kick).apply(new FootballTeam()));
+        assertEquals("Goal!", kick.compose(goal).apply(new Chelsea()));
     }
 
     private class BasketballTeam {}
