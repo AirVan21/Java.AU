@@ -8,16 +8,17 @@ import static org.junit.Assert.*;
  * Created by airvan21 on 21.03.16.
  */
 public class PredicateTest {
-    private final Predicate<Integer> isEven  = arg -> arg % 2 == 0;
-    private final Predicate<Integer> isOdd   = arg -> arg % 2 != 0;
-    private final Predicate<Integer> isDigit = arg -> (arg >= 0) && (arg < 10);
+    private final static Predicate<Integer> isEven  = arg -> arg % 2 == 0;
+    private final static Predicate<Integer> isOdd   = arg -> arg % 2 != 0;
+    private final static Predicate<Integer> isDigit = arg -> (arg >= 0) && (arg < 10);
 
-    private final Predicate<FootballTeam> isFC = arg -> true;
-    private final Predicate<FootballTeam> isBC = arg -> false;
+    private final static Predicate<FootballTeam> isFC = arg -> true;
+    private final static Predicate<FootballTeam> isBC = arg -> false;
+    private final static Predicate<Object>       fail = arg -> { fail(); return false; };
 
-    private final int EVEN_NUMBER = 2;
-    private final int ODD_NUMBER = 3;
-    private final int ODD_NON_DIGIT = 11;
+    private final static int EVEN_NUMBER = 2;
+    private final static int ODD_NUMBER = 3;
+    private final static int ODD_NON_DIGIT = 11;
 
     @Test
     public void testOr() {
@@ -31,6 +32,9 @@ public class PredicateTest {
         assertFalse(isDigit.or(isEven).apply(ODD_NON_DIGIT));
 
         assertTrue(isFC.or(isBC).apply(new Chelsea()));
+
+        // laziness test
+        assertTrue(isEven.or(fail).apply(EVEN_NUMBER));
     }
 
     @Test
@@ -42,6 +46,9 @@ public class PredicateTest {
         assertFalse(isEven.and(isDigit).apply(ODD_NUMBER));
 
         assertFalse(isFC.and(isBC).apply(new Chelsea()));
+
+        // laziness test
+        assertFalse(isEven.and(fail).apply(ODD_NUMBER));
     }
 
     @Test

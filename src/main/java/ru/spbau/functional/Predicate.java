@@ -5,8 +5,8 @@ package ru.spbau.functional;
  */
 public interface Predicate<A> extends Function1<A, Boolean> {
 
-    Predicate ALWAYS_TRUE  = arg -> true;
-    Predicate ALWAYS_FALSE = arg -> false;
+    Predicate<Object> ALWAYS_TRUE  = arg -> true;
+    Predicate<Object> ALWAYS_FALSE = arg -> false;
 
     default Predicate<A> or(Predicate<? super A> predicate) {
         return arg -> apply(arg) || predicate.apply(arg);
