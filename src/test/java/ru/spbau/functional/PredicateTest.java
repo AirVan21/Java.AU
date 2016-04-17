@@ -8,13 +8,13 @@ import static org.junit.Assert.*;
  * Created by airvan21 on 21.03.16.
  */
 public class PredicateTest {
-    private final static Predicate<Integer> isEven  = arg -> arg % 2 == 0;
-    private final static Predicate<Integer> isOdd   = arg -> arg % 2 != 0;
-    private final static Predicate<Integer> isDigit = arg -> (arg >= 0) && (arg < 10);
+    private final static Predicate<Integer> IS_EVEN = arg -> arg % 2 == 0;
+    private final static Predicate<Integer> IS_ODD = arg -> arg % 2 != 0;
+    private final static Predicate<Integer> IS_DIGIT = arg -> (arg >= 0) && (arg < 10);
 
-    private final static Predicate<FootballTeam> isFC = arg -> true;
-    private final static Predicate<FootballTeam> isBC = arg -> false;
-    private final static Predicate<Object>       fail = arg -> { fail(); return false; };
+    private final static Predicate<FootballTeam> IS_FC = arg -> true;
+    private final static Predicate<FootballTeam> IS_BC = arg -> false;
+    private final static Predicate<Object>       FAIL = arg -> { fail(); return false; };
 
     private final static int EVEN_NUMBER = 2;
     private final static int ODD_NUMBER = 3;
@@ -22,46 +22,46 @@ public class PredicateTest {
 
     @Test
     public void testOr() {
-        assertTrue(isEven.or(isOdd).apply(EVEN_NUMBER));
-        assertTrue(isEven.or(isOdd).apply(ODD_NUMBER));
+        assertTrue(IS_EVEN.or(IS_ODD).apply(EVEN_NUMBER));
+        assertTrue(IS_EVEN.or(IS_ODD).apply(ODD_NUMBER));
 
-        assertTrue(isOdd.or(isEven).apply(EVEN_NUMBER));
-        assertTrue(isOdd.or(isEven).apply(ODD_NUMBER));
+        assertTrue(IS_ODD.or(IS_EVEN).apply(EVEN_NUMBER));
+        assertTrue(IS_ODD.or(IS_EVEN).apply(ODD_NUMBER));
 
-        assertFalse(isEven.or(isDigit).apply(ODD_NON_DIGIT));
-        assertFalse(isDigit.or(isEven).apply(ODD_NON_DIGIT));
+        assertFalse(IS_EVEN.or(IS_DIGIT).apply(ODD_NON_DIGIT));
+        assertFalse(IS_DIGIT.or(IS_EVEN).apply(ODD_NON_DIGIT));
 
-        assertTrue(isFC.or(isBC).apply(new Chelsea()));
+        assertTrue(IS_FC.or(IS_BC).apply(new Chelsea()));
 
         // laziness test
-        assertTrue(isEven.or(fail).apply(EVEN_NUMBER));
+        assertTrue(IS_EVEN.or(FAIL).apply(EVEN_NUMBER));
     }
 
     @Test
     public void testAnd() {
-        assertTrue(isEven.and(isDigit).apply(EVEN_NUMBER));
-        assertTrue(isDigit.and(isEven).apply(EVEN_NUMBER));
+        assertTrue(IS_EVEN.and(IS_DIGIT).apply(EVEN_NUMBER));
+        assertTrue(IS_DIGIT.and(IS_EVEN).apply(EVEN_NUMBER));
 
-        assertFalse(isDigit.and(isEven).apply(ODD_NUMBER));
-        assertFalse(isEven.and(isDigit).apply(ODD_NUMBER));
+        assertFalse(IS_DIGIT.and(IS_EVEN).apply(ODD_NUMBER));
+        assertFalse(IS_EVEN.and(IS_DIGIT).apply(ODD_NUMBER));
 
-        assertFalse(isFC.and(isBC).apply(new Chelsea()));
+        assertFalse(IS_FC.and(IS_BC).apply(new Chelsea()));
 
         // laziness test
-        assertFalse(isEven.and(fail).apply(ODD_NUMBER));
+        assertFalse(IS_EVEN.and(FAIL).apply(ODD_NUMBER));
     }
 
     @Test
     public void testNot() {
-        assertTrue(isDigit.not().apply(ODD_NON_DIGIT));
-        assertTrue(isEven.not().apply(ODD_NUMBER));
+        assertTrue(IS_DIGIT.not().apply(ODD_NON_DIGIT));
+        assertTrue(IS_EVEN.not().apply(ODD_NUMBER));
 
-        assertFalse(isOdd.not().apply(ODD_NUMBER));
-        assertFalse(isEven.not().apply(EVEN_NUMBER));
+        assertFalse(IS_ODD.not().apply(ODD_NUMBER));
+        assertFalse(IS_EVEN.not().apply(EVEN_NUMBER));
 
-        assertTrue(isBC.not().apply(new Chelsea()));
+        assertTrue(IS_BC.not().apply(new Chelsea()));
     }
 
-    private class FootballTeam {}
-    private class Chelsea extends FootballTeam {}
+    private static class FootballTeam {}
+    private static class Chelsea extends FootballTeam {}
 }

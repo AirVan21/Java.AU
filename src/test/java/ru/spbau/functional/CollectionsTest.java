@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
  * Created by airvan21 on 21.03.16.
  */
 public class CollectionsTest {
-    private final static Predicate<Integer> isEven  = arg -> arg % 2 == 0;
-    private final static Predicate<Integer> isOdd   = arg -> arg % 2 != 0;
-    private final static Predicate<FootballTeam> isFC = arg -> true;
+    private final static Predicate<Integer> IS_EVEN = arg -> arg % 2 == 0;
+    private final static Predicate<Integer> IS_ODD = arg -> arg % 2 != 0;
+    private final static Predicate<FootballTeam> IS_FC = arg -> true;
 
     private final List<Integer>  list  = new ArrayList<>();
     private final Set<Integer>   set   = new HashSet<>();
@@ -38,13 +38,13 @@ public class CollectionsTest {
         final List<Boolean> checkOdd  = new ArrayList<>();
         final List<Boolean> checkType = new ArrayList<>();
 
-        list.forEach(item -> checkEven.add(isEven.apply(item)));
-        set.forEach(item -> checkOdd.add(isOdd.apply(item)));
-        queue.forEach(item -> checkType.add(isFC.apply(item)));
+        list.forEach(item -> checkEven.add(IS_EVEN.apply(item)));
+        set.forEach(item -> checkOdd.add(IS_ODD.apply(item)));
+        queue.forEach(item -> checkType.add(IS_FC.apply(item)));
 
-        assertEquals(checkEven, Collections.map(isEven, list));
-        assertEquals(checkOdd, Collections.map(isOdd, set));
-        assertEquals(checkType, Collections.map(isFC, queue));
+        assertEquals(checkEven, Collections.map(IS_EVEN, list));
+        assertEquals(checkOdd, Collections.map(IS_ODD, set));
+        assertEquals(checkType, Collections.map(IS_FC, queue));
     }
 
     @Test
@@ -53,13 +53,13 @@ public class CollectionsTest {
         final List<Integer> checkOdd = new ArrayList<>();
         final List<Chelsea> checkType = new ArrayList<>();
 
-        list.forEach(item -> { if (isEven.apply(item)) checkEven.add(item); });
-        set.forEach(item -> { if (isOdd.apply(item))  checkOdd.add(item); });
-        queue.forEach(item -> { if (isFC.apply(item))  checkType.add(item); });
+        list.forEach(item -> { if (IS_EVEN.apply(item)) checkEven.add(item); });
+        set.forEach(item -> { if (IS_ODD.apply(item))  checkOdd.add(item); });
+        queue.forEach(item -> { if (IS_FC.apply(item))  checkType.add(item); });
 
-        assertEquals(checkEven, Collections.filter(isEven, list));
-        assertEquals(checkOdd, Collections.filter(isOdd, set));
-        assertEquals(checkType, Collections.filter(isFC, queue));
+        assertEquals(checkEven, Collections.filter(IS_EVEN, list));
+        assertEquals(checkOdd, Collections.filter(IS_ODD, set));
+        assertEquals(checkType, Collections.filter(IS_FC, queue));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CollectionsTest {
         final List<Chelsea> checkType = new ArrayList<>();
 
         for (int item : list) {
-            if (!isEven.apply(item)) {
+            if (!IS_EVEN.apply(item)) {
                 break;
             }
 
@@ -77,7 +77,7 @@ public class CollectionsTest {
         }
 
         for (int item : list) {
-            if (!isOdd.apply(item)) {
+            if (!IS_ODD.apply(item)) {
                 break;
             }
 
@@ -85,16 +85,16 @@ public class CollectionsTest {
         }
 
         for (Chelsea item : queue) {
-            if (!isFC.apply(item)) {
+            if (!IS_FC.apply(item)) {
                 break;
             }
 
             checkType.add(item);
         }
 
-        assertEquals(checkEven, Collections.takeWhile(isEven, list));
-        assertEquals(checkOdd, Collections.takeWhile(isOdd, set));
-        assertEquals(checkType, Collections.takeWhile(isFC, queue));
+        assertEquals(checkEven, Collections.takeWhile(IS_EVEN, list));
+        assertEquals(checkOdd, Collections.takeWhile(IS_ODD, set));
+        assertEquals(checkType, Collections.takeWhile(IS_FC, queue));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class CollectionsTest {
         final List<Chelsea> checkType = new ArrayList<>();
 
         for (int item : list) {
-            if (isEven.apply(item)) {
+            if (IS_EVEN.apply(item)) {
                 break;
             }
 
@@ -112,7 +112,7 @@ public class CollectionsTest {
         }
 
         for (int item : list) {
-            if (isOdd.apply(item)) {
+            if (IS_ODD.apply(item)) {
                 break;
             }
 
@@ -120,16 +120,16 @@ public class CollectionsTest {
         }
 
         for (Chelsea item : queue) {
-            if (isFC.apply(item)) {
+            if (IS_FC.apply(item)) {
                 break;
             }
 
             checkType.add(item);
         }
 
-        assertEquals(checkEven, Collections.takeUnless(isEven, list));
-        assertEquals(checkOdd, Collections.takeUnless(isOdd, set));
-        assertEquals(checkType, Collections.takeUnless(isFC, queue));
+        assertEquals(checkEven, Collections.takeUnless(IS_EVEN, list));
+        assertEquals(checkOdd, Collections.takeUnless(IS_ODD, set));
+        assertEquals(checkType, Collections.takeUnless(IS_FC, queue));
     }
 
     @Test
@@ -164,6 +164,6 @@ public class CollectionsTest {
         assertEquals(new Integer(sum), Collections.foldr(plus, 0, set));
     }
 
-    private class FootballTeam {}
-    private class Chelsea extends FootballTeam {}
+    private static class FootballTeam {}
+    private static class Chelsea extends FootballTeam {}
 }

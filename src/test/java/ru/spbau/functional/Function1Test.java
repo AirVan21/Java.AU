@@ -8,14 +8,14 @@ import static org.junit.Assert.*;
  */
 public class Function1Test {
 
-    private final static Function1<Integer, Integer> f = arg -> 2 * arg;
-    private final static Function1<Integer, Integer> g = arg -> 3 + arg;
+    private final static Function1<Integer, Integer> F = arg -> 2 * arg;
+    private final static Function1<Integer, Integer> G = arg -> 3 + arg;
     private final static int CONST_FIVE = 5;
 
     @Test
     public void testApply() {
-        assertEquals(new Integer(CONST_FIVE * 2), f.apply(CONST_FIVE));
-        assertEquals(new Integer(CONST_FIVE + 3), g.apply(CONST_FIVE));
+        assertEquals(new Integer(CONST_FIVE * 2), F.apply(CONST_FIVE));
+        assertEquals(new Integer(CONST_FIVE + 3), G.apply(CONST_FIVE));
     }
 
     @Test
@@ -41,8 +41,8 @@ public class Function1Test {
 
     @Test
     public void testCompose() {
-        assertEquals(new Integer(CONST_FIVE * 2 + 3), f.compose(g).apply(CONST_FIVE));
-        assertEquals(new Integer((CONST_FIVE + 3) * 2), g.compose(f).apply(CONST_FIVE));
+        assertEquals(new Integer(CONST_FIVE * 2 + 3), F.compose(G).apply(CONST_FIVE));
+        assertEquals(new Integer((CONST_FIVE + 3) * 2), G.compose(F).apply(CONST_FIVE));
 
         final Function1<FootballTeam, String>       kick = arg -> "Kick!";
         final Function1<FootballTeam, FootballTeam> id   = arg -> arg;
@@ -52,7 +52,7 @@ public class Function1Test {
         assertEquals("Goal!", kick.compose(goal).apply(new Chelsea()));
     }
 
-    private class BasketballTeam {}
-    private class FootballTeam {}
-    private class Chelsea extends FootballTeam {}
+    private static class BasketballTeam {}
+    private static class FootballTeam {}
+    private static class Chelsea extends FootballTeam {}
 }
