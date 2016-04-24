@@ -64,8 +64,9 @@ public final class SecondPartTasks {
                         .mapToInt(String::length)
                         .sum()))
                 .max(Comparator.comparingInt(Pair::getValue))
-                .orElse(Pair.of("", 0))
+                .orElse(Pair.of(null, null))
                 .getKey();
+
     }
 
     // Вы крупный поставщик продуктов. Каждая торговая сеть делает вам заказ в виде Map<Товар, Количество>.
