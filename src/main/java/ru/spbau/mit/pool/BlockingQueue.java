@@ -17,6 +17,7 @@ public class BlockingQueue<T> {
 
     public synchronized void enqueue(T task) {
         queue.add(task);
+        notify();
     }
 
     public synchronized T dequeue() throws EmptyBlockingQueueException {
@@ -26,5 +27,4 @@ public class BlockingQueue<T> {
 
         return queue.remove(0);
     }
-
 }

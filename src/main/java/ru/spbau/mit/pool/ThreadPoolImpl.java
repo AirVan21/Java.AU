@@ -2,6 +2,7 @@ package ru.spbau.mit.pool;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
@@ -16,7 +17,14 @@ public class ThreadPoolImpl implements ThreadPool {
                 .range(0, numberOfThreads)
                 .forEach(index -> threads.add(new PoolThread(taskQueue)));
 
-        threads.forEach(Thread::start);
+        threads.forEach(thread -> thread.start());
+    }
+
+    public <R> LightFuture<R> submitTask(Supplier<R> supplier) {
+        LightFuture<R> future = new LightFutureImpl<>(supplier);
+        taskQueue.enqueue(future);
+
+        return future;
     }
 
     public void shutdown() {

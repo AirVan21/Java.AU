@@ -18,9 +18,11 @@ public class PoolThread extends Thread {
             try {
                 synchronized (taskQueue) {
                     while (taskQueue.isEmpty()) {
-                        wait();
+                        isWaiting = true;
+                        taskQueue.wait();
                     }
 
+                    isWaiting = false;
                     task = taskQueue.dequeue();
                 }
 

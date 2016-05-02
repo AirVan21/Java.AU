@@ -19,7 +19,7 @@ public class LightFutureImpl<A> implements LightFuture<A> {
 
     @Override
     public boolean isReady() {
-        return false;
+        return isReady;
     }
 
     @Override
@@ -43,7 +43,8 @@ public class LightFutureImpl<A> implements LightFuture<A> {
                 thenApplyQueue.enqueue(future);
             }
         }
-        return null;
+
+        return future;
     }
 
     public void run() throws LightExecutionException {
@@ -52,10 +53,6 @@ public class LightFutureImpl<A> implements LightFuture<A> {
             isReady = true;
         } catch (Exception e) {
             isException = true;
-        } finally {
-            synchronized (this) {
-                notifyAll();
-            }
         }
     }
 }
