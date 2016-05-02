@@ -11,6 +11,10 @@ public class BlockingQueue<T> {
 
     public BlockingQueue() {}
 
+    public synchronized boolean isEmpty() {
+        return queue.isEmpty();
+    }
+
     public synchronized void enqueue(T task) {
         queue.add(task);
     }
