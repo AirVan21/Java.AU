@@ -95,7 +95,9 @@ public class LightFutureImpl<A> implements LightFuture<A> {
     public void rejectThenApplyFutures() {
         synchronized (thenApplyQueue) {
             while (!thenApplyQueue.isEmpty()) {
-                thenApplyQueue.dequeue().markRejected();
+                LightFuture future = thenApplyQueue.dequeue();
+                future.markRejected();
+                future.rejectThenApplyFutures();
             }
         }
     }
