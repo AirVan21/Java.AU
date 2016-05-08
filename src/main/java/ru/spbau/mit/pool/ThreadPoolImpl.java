@@ -30,9 +30,7 @@ public class ThreadPoolImpl implements ThreadPool {
     public void shutdown() {
         synchronized (taskQueue) {
             while (!taskQueue.isEmpty()) {
-                LightFuture future = taskQueue.dequeue();
-                future.rejectThenApplyFutures();
-                future.markRejected();
+                taskQueue.dequeue();
             }
         }
 
