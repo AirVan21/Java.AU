@@ -7,11 +7,17 @@ import java.util.function.Function;
  */
 public interface LightFuture<A> {
 
-    boolean isReady();
-
     A get() throws LightExecutionException, InterruptedException;
 
-    <R> LightFuture<R> thenApply(Function<? super A, R> transformation);
+    <R> LightFuture<R> thenApply(Function<? super A, R> transformation) throws InterruptedException;
 
     void run() throws LightExecutionException;
+
+    void markRejected();
+
+    void rejectThenApplyFutures();
+
+    boolean isReady();
+
+    boolean hasException();
 }

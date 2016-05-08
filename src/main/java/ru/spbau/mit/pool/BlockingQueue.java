@@ -20,11 +20,7 @@ public class BlockingQueue<T> {
         notify();
     }
 
-    public synchronized T dequeue() throws EmptyBlockingQueueException {
-        if (queue.size() == 0) {
-            throw new EmptyBlockingQueueException();
-        }
-
+    public synchronized T dequeue() {
         return queue.remove(0);
     }
 }

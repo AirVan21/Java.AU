@@ -4,11 +4,15 @@ package ru.spbau.mit.pool;
  * Created by airvan21 on 02.05.16.
  */
 public class PoolThread extends Thread {
-    private BlockingQueue<LightFuture> taskQueue;
+    private final BlockingQueue<LightFuture> taskQueue;
     private volatile boolean isWaiting = true;
 
     public PoolThread(BlockingQueue<LightFuture> taskQueue) {
         this.taskQueue = taskQueue;
+    }
+
+    public synchronized boolean isWaiting() {
+        return isWaiting;
     }
 
     @Override
@@ -29,16 +33,9 @@ public class PoolThread extends Thread {
                 task.run();
             } catch (InterruptedException e) {
                 break;
-            } catch (EmptyBlockingQueueException e) {
-                e.getMessage();
-                e.printStackTrace();
             } catch (LightExecutionException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public synchronized boolean isWaiting() {
-        return isWaiting;
     }
 }

@@ -10,23 +10,40 @@ import java.util.stream.IntStream;
  */
 public class ThreadPoolImpl implements ThreadPool {
     private final BlockingQueue<LightFuture> taskQueue = new BlockingQueue<>();
-    private final List<Thread> threads                 = new ArrayList<>();
+    private final List<PoolThread> threads             = new ArrayList<>();
 
     public ThreadPoolImpl(int numberOfThreads) {
         IntStream
                 .range(0, numberOfThreads)
                 .forEach(index -> threads.add(new PoolThread(taskQueue)));
 
-        threads.forEach(thread -> thread.start());
+        threads.forEach(PoolThread::start);
     }
 
     public <R> LightFuture<R> submitTask(Supplier<R> supplier) {
-        LightFuture<R> future = new LightFutureImpl<>(supplier);
+        LightFuture<R> future = new LightFutureImpl<>(supplier, taskQueue);
         taskQueue.enqueue(future);
 
         return future;
     }
 
     public void shutdown() {
+        synchronized (taskQueue) {
+            while (!taskQueue.isEmpty()) {
+                LightFuture future = taskQueue.dequeue();
+                future.rejectThenApplyFutures();
+                future.markRejected();
+            }
+        }
+
+        threads.forEach(PoolThread::interrupt);
+    }
+
+    public List<PoolThread> getThreads() {
+        return threads;
+    }
+
+    public BlockingQueue<LightFuture> getTaskQueue() {
+        return taskQueue;
     }
 }
